@@ -1,7 +1,9 @@
 const path = require('path');
+const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const AutoDllPlugin = require('autodll-webpack-plugin')
 module.exports = {
   entry: {
     bundle: path.resolve(__dirname, '../src/main.js')
@@ -65,7 +67,21 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: 'static/css/[name].[hash].css',
       chunkFilename: 'static/css/[name].[hash].css'
+    }),
+    new webpack.optimize.SplitChunksPlugin(),
+    new AutoDllPlugin({
+      inject: true,
+      debug: false,
+      filename: '[name]_[hash].js',
+      path: 'static',
+      entry: {
+        vue: [
+          'vue',
+          'vue-router'
+        ]
+      }
     })
+    
   ],
   resolve: {
     alias: {
