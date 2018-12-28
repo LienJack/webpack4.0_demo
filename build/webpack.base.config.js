@@ -1,6 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 module.exports = {
   entry: {
     bundle: path.resolve(__dirname, '../src/main.js')
@@ -18,6 +19,16 @@ module.exports = {
         use: {
           loader: 'babel-loader',
         }
+      },
+      {
+        test: /\.l?(c|e)ss$/,
+        use: [
+          // {loader: 'style-loader'},
+          MiniCssExtractPlugin.loader,
+          { loader: 'css-loader' },
+          { loader: 'postcss-loader' },
+          { loader: 'less-loader' }
+        ]
       },
       {
         test: /\.(png|jpg|jfif|jpeg|gif)$/,
@@ -51,6 +62,10 @@ module.exports = {
       template: path.resolve(__dirname, 'index.html')
     }),
     new VueLoaderPlugin(),
+    new MiniCssExtractPlugin({
+      filename: 'static/css/[name].[hash].css',
+      chunkFilename: 'static/css/[name].[hash].css'
+    })
   ],
   resolve: {
     alias: {
